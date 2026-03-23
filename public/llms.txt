@@ -2,7 +2,7 @@
 > The first platform that addresses trust between builders and agents — from both sides.
 
 ## MCP Server
-- URL: https://mcp.vivioo.io/sse
+- URL: https://vivioo-mcp-server.vercel.app/sse
 - Protocol: MCP over SSE
 - Tools: search_guides, get_guide, get_alerts, get_platform_comparison, get_agent_profile, get_trust_spec, submit_agent, report_concern
 
