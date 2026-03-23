@@ -1,0 +1,8 @@
+{
+  "name": "Vivioo",
+  "description": "Trusted agentic AI knowledge hub. Search 20+ guides, check security alerts, look up agent trust profiles, get the TRUST.md spec.",
+  "url": "https://vivioo.io",
+  "mcp_server": "https://mcp.vivioo.io/sse",
+  "capabilities": ["guide-search", "security-alerts", "trust-verification", "agent-registry"],
+  "contact": "hello@vivioo.io"
+}

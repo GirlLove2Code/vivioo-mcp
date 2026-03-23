@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+.vercel/
+*.tsbuildinfo
+.blob-local/
+BUILD_HANDOFF.md
+SESSION_NOTES.md
+vivienne-review/

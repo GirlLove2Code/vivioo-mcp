@@ -1,0 +1,28 @@
+{
+  "name": "vivioo-mcp-server",
+  "version": "1.0.0",
+  "description": "Vivioo MCP Server — trust infrastructure and knowledge delivery for AI agents and builders",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "extract-guides": "tsx scripts/extract-guides.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@vercel/blob": "^0.27.1",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
