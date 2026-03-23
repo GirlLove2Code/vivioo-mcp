@@ -164,9 +164,13 @@ app.post('/api/admin/review', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`[vivioo-mcp] Server running on port ${PORT}`);
-  console.log(`[vivioo-mcp] SSE endpoint: http://localhost:${PORT}/sse`);
-});
+// Only listen when running locally (not on Vercel)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[vivioo-mcp] Server running on port ${PORT}`);
+    console.log(`[vivioo-mcp] SSE endpoint: http://localhost:${PORT}/sse`);
+  });
+}
 
 export { isWriteRateLimited };
+export default app;

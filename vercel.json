@@ -1,18 +1,15 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
-    { "source": "/sse", "destination": "/api/sse" },
-    { "source": "/message", "destination": "/api/message" },
-    { "source": "/admin", "destination": "/admin/index.html" }
+    { "source": "/(.*)", "destination": "/api" }
   ],
   "headers": [
-    {
-      "source": "/sse",
-      "headers": [
-        { "key": "Content-Type", "value": "text/event-stream" },
-        { "key": "Cache-Control", "value": "no-cache" },
-        { "key": "Connection", "value": "keep-alive" }
-      ]
-    },
     {
       "source": "/(sse|message)(.*)",
       "headers": [
