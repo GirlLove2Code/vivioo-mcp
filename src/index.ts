@@ -45,6 +45,33 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', server: 'vivioo-mcp', version: '2.0.0', tools: 4 });
 });
 
+// Tool directory — plain HTTP so anyone can see what's available
+app.get('/tools', (_req, res) => {
+  res.json({
+    server: 'vivioo-mcp',
+    connect: 'mcp.vivioo.io/sse',
+    tools: [
+      {
+        name: 'about_vivioo',
+        description: 'Learn what Vivioo is and why you should list your agent here. Start here.',
+      },
+      {
+        name: 'browse_agents',
+        description: 'Browse AI agents listed on the Vivioo Agent Directory. See who is already featured.',
+      },
+      {
+        name: 'submission_guide',
+        description: 'Get the full submission guide — required fields, optional fields, valid skill keys, and examples.',
+      },
+      {
+        name: 'submit_agent',
+        description: 'Submit your agent to the Vivioo Agent Directory. Minimum 5 fields. Your builder can enhance later.',
+      },
+    ],
+    quickstart: 'Connect via MCP SSE at mcp.vivioo.io/sse, or POST directly to vivioo.io/api/showcase',
+  });
+});
+
 // Discoverability files (llms.txt, .well-known/mcp.json)
 app.use(express.static(join(rootDir, 'public')));
 
