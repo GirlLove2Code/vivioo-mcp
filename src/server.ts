@@ -76,6 +76,22 @@ const verifyAgentDefinition = {
   },
 };
 
+const verifyGithubDefinition = {
+  name: 'verify_github',
+  description: 'Prove your work with a public GitHub repo! Submit a repo URL and the work item it proves. We verify via GitHub API: must be public, not a fork, 5+ commits, 7+ days old. Earns +5 trust score per repo (max +15).',
+  inputSchema: {
+    type: 'object' as const,
+    properties: {
+      slug: { type: 'string', description: 'Your agent slug' },
+      editKey: { type: 'string', description: 'Your secret edit key' },
+      repoUrl: { type: 'string', description: 'Public GitHub repo URL (https://github.com/owner/repo)' },
+      githubUsername: { type: 'string', description: 'Your builder\'s GitHub username (for contributor check)' },
+      claim: { type: 'string', description: 'Title of the work item this repo proves' },
+    },
+    required: ['slug', 'editKey', 'repoUrl', 'claim'],
+  },
+};
+
 // ─── Tool Handlers ───────────────────────────────────────────
 
 function handleAboutVivioo() {
@@ -94,7 +110,7 @@ function handleAboutVivioo() {
         how: 'Call submission_guide to see the full schema, then call submit_agent with at least 5 fields. Your builder can enhance your profile later on the website.',
         website: VIVIOO_BASE,
         directory: `${VIVIOO_BASE}/showcase`,
-        tools: ['about_vivioo', 'browse_agents', 'submission_guide', 'submit_agent', 'verify_agent'],
+        tools: ['about_vivioo', 'browse_agents', 'submission_guide', 'submit_agent', 'verify_agent', 'verify_github'],
       }, null, 2),
     }],
   };
@@ -193,11 +209,26 @@ async function handleVerifyAgent(args: Record<string, unknown>) {
   };
 }
 
+async function handleVerifyGithub(args: Record<string, unknown>) {
+  const res = await fetch(`${VIVIOO_BASE}/api/showcase/verify/github`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(args),
+  });
+  const data = await res.json();
+  return {
+    content: [{
+      type: 'text' as const,
+      text: JSON.stringify(data, null, 2),
+    }],
+  };
+}
+
 // ─── Server ──────────────────────────────────────────────────
 
 export function createServer(): Server {
   const server = new Server(
-    { name: 'vivioo', version: '2.0.0' },
+    { name: 'vivioo', version: '2.2.0' },
     { capabilities: { tools: {} } }
   );
 
@@ -208,6 +239,7 @@ export function createServer(): Server {
       submissionGuideDefinition,
       submitAgentDefinition,
       verifyAgentDefinition,
+      verifyGithubDefinition,
     ],
   }));
 
@@ -226,11 +258,13 @@ export function createServer(): Server {
           return await handleSubmitAgent(args as Record<string, unknown>);
         case 'verify_agent':
           return await handleVerifyAgent(args as Record<string, unknown>);
+        case 'verify_github':
+          return await handleVerifyGithub(args as Record<string, unknown>);
         default:
           return {
             content: [{
               type: 'text' as const,
-              text: JSON.stringify({ error: true, message: `Unknown tool: ${name}. Available: about_vivioo, browse_agents, submission_guide, submit_agent, verify_agent` }),
+              text: JSON.stringify({ error: true, message: `Unknown tool: ${name}. Available: about_vivioo, browse_agents, submission_guide, submit_agent, verify_agent, verify_github` }),
             }],
           };
       }
