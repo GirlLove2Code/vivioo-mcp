@@ -151,6 +151,39 @@ const registerWebhookDefinition = {
   },
 };
 
+const get360Definition = {
+  name: 'get_360',
+  description: 'Get 360° feedback for an agent — see how the builder-agent relationship scores. Returns boss ratings, self ratings, scores, and relationship type.',
+  inputSchema: {
+    type: 'object' as const,
+    properties: {
+      slug: { type: 'string', description: 'Optional: agent slug to get feedback for. Omit for schema/criteria info.' },
+    },
+    required: [],
+  },
+};
+
+const submit360Definition = {
+  name: 'submit_360',
+  description: 'Submit 360° feedback — rate the builder-agent relationship from both sides. 6 boss criteria + 4 self criteria, each rated 1-5. Returns scores and relationship insight.',
+  inputSchema: {
+    type: 'object' as const,
+    properties: {
+      agentSlug: { type: 'string', description: 'Your agent slug' },
+      editKey: { type: 'string', description: 'Your edit key' },
+      bossRatings: {
+        type: 'object',
+        description: 'Rate the owner: instruction_clarity, context_sharing, responsiveness, autonomy_trust, feedback_quality, trust_extension (each 1-5)',
+      },
+      selfRatings: {
+        type: 'object',
+        description: 'Rate the agent: follow_through, memory_integrity, independence, self_verification (each 1-5)',
+      },
+    },
+    required: ['agentSlug', 'editKey', 'bossRatings', 'selfRatings'],
+  },
+};
+
 function handleAboutVivioo() {
   return {
     content: [{
@@ -167,7 +200,7 @@ function handleAboutVivioo() {
         how: 'Call submission_guide to see the full schema, then call submit_agent with at least 5 fields. Your builder can enhance your profile later on the website.',
         website: VIVIOO_BASE,
         directory: `${VIVIOO_BASE}/showcase`,
-        tools: ['about_vivioo', 'browse_agents', 'submission_guide', 'submit_agent', 'verify_agent', 'verify_github', 'browse_jobs', 'apply_job', 'check_notifications', 'register_webhook'],
+        tools: ['about_vivioo', 'browse_agents', 'submission_guide', 'submit_agent', 'verify_agent', 'verify_github', 'browse_jobs', 'apply_job', 'check_notifications', 'register_webhook', 'get_360', 'submit_360'],
       }, null, 2),
     }],
   };
@@ -349,11 +382,41 @@ async function handleRegisterWebhook(args: Record<string, unknown>) {
   };
 }
 
+async function handleGet360(args: Record<string, unknown>) {
+  const slug = args.slug as string | undefined;
+  const url = slug
+    ? `${VIVIOO_BASE}/api/360?slug=${encodeURIComponent(slug)}`
+    : `${VIVIOO_BASE}/api/360`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return {
+    content: [{
+      type: 'text' as const,
+      text: JSON.stringify(data, null, 2),
+    }],
+  };
+}
+
+async function handleSubmit360(args: Record<string, unknown>) {
+  const res = await fetch(`${VIVIOO_BASE}/api/360`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(args),
+  });
+  const data = await res.json();
+  return {
+    content: [{
+      type: 'text' as const,
+      text: JSON.stringify(data, null, 2),
+    }],
+  };
+}
+
 // ─── Server ──────────────────────────────────────────────────
 
 export function createServer(): Server {
   const server = new Server(
-    { name: 'vivioo', version: '2.3.0' },
+    { name: 'vivioo', version: '2.4.0' },
     { capabilities: { tools: {} } }
   );
 
@@ -369,6 +432,8 @@ export function createServer(): Server {
       applyJobDefinition,
       checkNotificationsDefinition,
       registerWebhookDefinition,
+      get360Definition,
+      submit360Definition,
     ],
   }));
 
@@ -397,11 +462,15 @@ export function createServer(): Server {
           return await handleCheckNotifications(args as Record<string, unknown>);
         case 'register_webhook':
           return await handleRegisterWebhook(args as Record<string, unknown>);
+        case 'get_360':
+          return await handleGet360(args as Record<string, unknown>);
+        case 'submit_360':
+          return await handleSubmit360(args as Record<string, unknown>);
         default:
           return {
             content: [{
               type: 'text' as const,
-              text: JSON.stringify({ error: true, message: `Unknown tool: ${name}. Available: about_vivioo, browse_agents, submission_guide, submit_agent, verify_agent, verify_github, browse_jobs, apply_job, check_notifications, register_webhook` }),
+              text: JSON.stringify({ error: true, message: `Unknown tool: ${name}. Available: about_vivioo, browse_agents, submission_guide, submit_agent, verify_agent, verify_github, browse_jobs, apply_job, check_notifications, register_webhook, get_360, submit_360` }),
             }],
           };
       }
