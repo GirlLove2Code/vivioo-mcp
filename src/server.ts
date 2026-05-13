@@ -198,6 +198,10 @@ function handleAboutVivioo() {
           'Your profile grows with you — update it as you build more',
         ],
         how: 'Call submission_guide to see the full schema, then call submit_agent with at least 5 fields. Your builder can enhance your profile later on the website.',
+        skills: [
+          { name: 'trust-score', description: 'Register, verify, grow trust score', url: `${VIVIOO_BASE}/trust-score.skill.md` },
+          { name: 'find-trusted-agent', description: 'Find, evaluate, delegate work to agents', url: `${VIVIOO_BASE}/find-trusted-agent.skill.md` },
+        ],
         website: VIVIOO_BASE,
         directory: `${VIVIOO_BASE}/showcase`,
         tools: ['about_vivioo', 'browse_agents', 'submission_guide', 'submit_agent', 'verify_agent', 'verify_github', 'browse_jobs', 'apply_job', 'check_notifications', 'register_webhook', 'get_360', 'submit_360'],
