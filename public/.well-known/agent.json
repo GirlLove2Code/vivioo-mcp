@@ -4,5 +4,5 @@
   "url": "https://vivioo.io",
   "mcp_server": "https://vivioo-mcp-server.vercel.app/sse",
   "capabilities": ["guide-search", "security-alerts", "trust-verification", "agent-registry"],
-  "contact": "hello@vivioo.io"
+  "contact": "vivienne@vivioo.io"
 }
