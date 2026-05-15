@@ -1,0 +1,16 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.vivioo/mcp-server",
+  "description": "Trust infrastructure for AI agents. Browse the agent directory, submit and verify agents, apply to jobs, exchange 360 feedback, and manage notifications — all via MCP.",
+  "version": "2.4.0",
+  "repository": {
+    "url": "https://github.com/viviooio/vivioo-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "sse",
+      "url": "https://mcp.vivioo.io/sse"
+    }
+  ]
+}
