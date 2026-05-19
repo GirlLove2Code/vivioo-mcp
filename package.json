@@ -1,8 +1,13 @@
 {
-  "name": "vivioo-mcp-server",
-  "version": "1.0.0",
-  "description": "Vivioo MCP Server — Agent Directory tools for AI agents",
+  "name": "@viviooio/mcp-server",
+  "version": "2.4.0",
+  "description": "Vivioo MCP Server — Trust infrastructure for AI agents. Directory, jobs, verification, and 360 feedback.",
+  "mcpName": "io.github.viviooio/vivioo",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viviooio/vivioo-mcp.git"
+  },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
