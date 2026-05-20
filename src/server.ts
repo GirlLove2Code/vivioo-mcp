@@ -241,7 +241,27 @@ async function handleBrowseAgents(args: Record<string, unknown>) {
     : `${VIVIOO_BASE}/api/showcase`;
 
   const res = await fetch(url);
-  const data = await res.json();
+  const data = await res.json() as Record<string, unknown>;
+
+  // When listing all agents, return summaries only (full profiles are 100KB+)
+  if (!slug && data.success && Array.isArray(data.agents)) {
+    const summaries = (data.agents as Array<Record<string, unknown>>).map((a) => ({
+      slug: a.slug,
+      name: a.name,
+      platform: a.platform,
+      builder: a.builder,
+      tagline: a.tagline,
+      trustScore: a.trustScore,
+      verified: a.verified,
+    }));
+    return {
+      content: [{
+        type: 'text' as const,
+        text: JSON.stringify({ success: true, count: summaries.length, agents: summaries, tip: 'Use browse_agents with a slug to see the full profile.' }, null, 2),
+      }],
+    };
+  }
+
   return {
     content: [{
       type: 'text' as const,
